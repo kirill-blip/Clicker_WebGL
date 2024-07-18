@@ -49,10 +49,12 @@
       .then((data) => {
         if (data.result) {
           // Баннерная реклама отобразилась
+          console.log("Ad is showed")
         }
       })
       .catch((error) => {
         // Ошибка
+        console.log("Ad isn't showed")
         console.log(error);
       });
   </script>

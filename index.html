@@ -46,15 +46,15 @@
       banner_location: 'bottom',
       layout_type: 'resize',
       can_close: 'false'
-    })
-      .then((data) => {
-        if (data.result) {
-          console.log("Ads showed. " + data.result);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    }).then((data) => {
+      if (data.result) {
+        console.log("Ads showed. " + data.result);
+      }
+
+      console.log("Ads should have appeared")
+    }).catch((error) => {
+      console.log(error);
+    });
   </script>
 
   <script>

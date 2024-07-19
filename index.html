@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Unity WebGL Player | Clicker</title>
+  <title>Unity WebGL Player | HeartClick</title>
   <link rel="shortcut icon" href="TemplateData/favicon.ico">
   <link rel="stylesheet" href="TemplateData/style.css">
 
@@ -31,32 +31,16 @@
     vkBridge.subscribe((e) => {
       if (e.detail.type === 'VKWebAppViewHide') {
         // Действия при переключении из игры или мини приложения
-        myUnityInstance.SendMessage('VK', 'GameHide');
+        myUnityInstance.SendMessage('VK', 'HideGame');
       }
     });
 
     vkBridge.subscribe((e) => {
       if (e.detail.type === 'VKWebAppViewRestore') {
         // Действия при восстановлении экрана игры или мини приложения
-        myUnityInstance.SendMessage('VK', 'GameShow');
+        myUnityInstance.SendMessage('VK', 'ShowGame');
       }
     });
-
-    vkBridge.send('VKWebAppShowBannerAd', {
-      banner_location: 'bottom',
-      layout_type: 'resize',
-    })
-      .then((data) => {
-        if (data.result) {
-          // Баннерная реклама отобразилась
-          console.log("Ad is showed")
-        }
-      })
-      .catch((error) => {
-        // Ошибка
-        console.log("Ad isn't showed")
-        console.log(error);
-      });
   </script>
 
   <script>
@@ -96,13 +80,13 @@
     var config = {
       dataUrl: buildUrl + "/Clicker_WebGL.data.unityweb",
       frameworkUrl: buildUrl + "/Clicker_WebGL.framework.js.unityweb",
-      codeUrl: buildUrl + "/Clicker_WebGL.wasm.unityweb",
-      streamingAssetsUrl: "StreamingAssets",
+        codeUrl: buildUrl + "/Clicker_WebGL.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
       companyName: "Kirill Golubenko",
-      productName: "Сердцеклик",
-      productVersion: "1.0.0",
-      showBanner: unityShowBanner,
-    };
+    productName: "Сердцеклик",
+    productVersion: "1.0.0",
+    showBanner: unityShowBanner,
+      };
 
     // By default, Unity keeps WebGL canvas render target size matched with
     // the DOM size of the canvas element (scaled by window.devicePixelRatio)
@@ -132,6 +116,7 @@
     loadingBar.style.display = "block";
 
     var myUnityInstance = null;
+    var platform = "";
 
     var script = document.createElement("script");
     script.src = loaderUrl;
@@ -143,10 +128,40 @@
 
         myUnityInstance = unityInstance;
 
+        vkBridge.send('VKWebAppGetClientVersion')
+          .then((data) => {
+            if (data.platform) {
+              platform = data.platform;
+              showAdd();
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
+
       }).catch((message) => {
         alert(message);
       });
     };
+
+    function showAdd() {
+      if (platform == "web") {
+        vkBridge.send('VKWebAppShowBannerAd', {
+          banner_location: 'bottom',
+          layout_type: 'resize',
+          can_close: 'false'
+        })
+          .then((data) => {
+            if (data.result) {
+              console.log("Ads showed. " + data.result);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }
 
     document.body.appendChild(script);
 

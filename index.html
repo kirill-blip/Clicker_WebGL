@@ -41,20 +41,6 @@
         myUnityInstance.SendMessage('VK', 'ShowGame');
       }
     });
-
-    vkBridge.send('VKWebAppShowBannerAd', {
-      banner_location: 'bottom',
-      layout_type: 'resize',
-      can_close: 'false'
-    }).then((data) => {
-      if (data.result) {
-        console.log("Ads showed. " + data.result);
-      }
-
-      console.log("Ads should have appeared")
-    }).catch((error) => {
-      console.log(error);
-    });
   </script>
 
   <script>
@@ -94,13 +80,13 @@
     var config = {
       dataUrl: buildUrl + "/Clicker_WebGL.data.unityweb",
       frameworkUrl: buildUrl + "/Clicker_WebGL.framework.js.unityweb",
-      codeUrl: buildUrl + "/Clicker_WebGL.wasm.unityweb",
-      streamingAssetsUrl: "StreamingAssets",
+        codeUrl: buildUrl + "/Clicker_WebGL.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
       companyName: "Kirill Golubenko",
-      productName: "Сердцеклик",
-      productVersion: "1.0.0",
-      showBanner: unityShowBanner,
-    };
+    productName: "Сердцеклик",
+    productVersion: "1.0.0",
+    showBanner: unityShowBanner,
+      };
 
     // By default, Unity keeps WebGL canvas render target size matched with
     // the DOM size of the canvas element (scaled by window.devicePixelRatio)
@@ -130,6 +116,7 @@
     loadingBar.style.display = "block";
 
     var myUnityInstance = null;
+    var platform = "";
 
     var script = document.createElement("script");
     script.src = loaderUrl;
@@ -144,6 +131,8 @@
         vkBridge.send('VKWebAppGetClientVersion')
           .then((data) => {
             if (data.platform) {
+              platform = data.platform;
+              showAdd();
             }
           })
           .catch((error) => {
@@ -155,6 +144,24 @@
         alert(message);
       });
     };
+
+    function showAdd() {
+      if (platform == "web") {
+        vkBridge.send('VKWebAppShowBannerAd', {
+          banner_location: 'bottom',
+          layout_type: 'resize',
+          can_close: 'false'
+        })
+          .then((data) => {
+            if (data.result) {
+              console.log("Ads showed. " + data.result);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }
 
     document.body.appendChild(script);
 

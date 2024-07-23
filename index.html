@@ -93,12 +93,12 @@
     var buildUrl = "Build";
     var loaderUrl = buildUrl + "/Clicker_WebGL.loader.js";
     var config = {
-      dataUrl: buildUrl + "/Clicker_WebGL.data",
-      frameworkUrl: buildUrl + "/Clicker_WebGL.framework.js",
-      codeUrl: buildUrl + "/Clicker_WebGL.wasm",
-      streamingAssetsUrl: "StreamingAssets",
+      dataUrl: buildUrl + "/Clicker_WebGL.data.unityweb",
+      frameworkUrl: buildUrl + "/Clicker_WebGL.framework.js.unityweb",
+        codeUrl: buildUrl + "/Clicker_WebGL.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
       companyName: "Kirill Golubenko",
-      productName: "Сердцеклик",
+    productName: "Сердцеклик",
     productVersion: "1.0.0",
     showBanner: unityShowBanner,
       };
@@ -141,7 +141,6 @@
         loadingBar.style.display = "none";
 
         myUnityInstance = unityInstance;
-
       }).catch((message) => {
         alert(message);
       });

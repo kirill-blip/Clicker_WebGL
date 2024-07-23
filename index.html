@@ -41,6 +41,21 @@
         myUnityInstance.SendMessage('VK', 'ShowGame');
       }
     });
+
+    vkBridge.send('VKWebAppShowBannerAd', {
+      banner_location: 'bottom',
+      layout_type: 'resize',
+      can_close: 'false'
+    })
+      .then((data) => {
+        if (data.result) {
+
+        }
+        console.log("Ads showed. " + data.result);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   </script>
 
   <script>
@@ -78,12 +93,12 @@
     var buildUrl = "Build";
     var loaderUrl = buildUrl + "/Clicker_WebGL.loader.js";
     var config = {
-      dataUrl: buildUrl + "/Clicker_WebGL.data.unityweb",
-      frameworkUrl: buildUrl + "/Clicker_WebGL.framework.js.unityweb",
-        codeUrl: buildUrl + "/Clicker_WebGL.wasm.unityweb",
-        streamingAssetsUrl: "StreamingAssets",
+      dataUrl: buildUrl + "/Clicker_WebGL.data",
+      frameworkUrl: buildUrl + "/Clicker_WebGL.framework.js",
+      codeUrl: buildUrl + "/Clicker_WebGL.wasm",
+      streamingAssetsUrl: "StreamingAssets",
       companyName: "Kirill Golubenko",
-    productName: "Сердцеклик",
+      productName: "Сердцеклик",
     productVersion: "1.0.0",
     showBanner: unityShowBanner,
       };
@@ -116,7 +131,6 @@
     loadingBar.style.display = "block";
 
     var myUnityInstance = null;
-    var platform = "";
 
     var script = document.createElement("script");
     script.src = loaderUrl;
@@ -128,40 +142,10 @@
 
         myUnityInstance = unityInstance;
 
-        vkBridge.send('VKWebAppGetClientVersion')
-          .then((data) => {
-            if (data.platform) {
-              platform = data.platform;
-              showAdd();
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-
-
       }).catch((message) => {
         alert(message);
       });
     };
-
-    function showAdd() {
-      if (platform == "web") {
-        vkBridge.send('VKWebAppShowBannerAd', {
-          banner_location: 'bottom',
-          layout_type: 'resize',
-          can_close: 'false'
-        })
-          .then((data) => {
-            if (data.result) {
-              console.log("Ads showed. " + data.result);
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
-    }
 
     document.body.appendChild(script);
 
